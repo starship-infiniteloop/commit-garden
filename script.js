@@ -1,3 +1,7 @@
+/* ==========================================================================
+   COMMIT GARDEN - CORE JAVASCRIPT SYSTEM
+   ========================================================================== */
+
 // --- GLOBAL APPLICATION STATE ---
 const state = {
   username: null,
@@ -16,7 +20,8 @@ const state = {
   },
   repos: [],
   activityLog: [],
-  contributionData: []
+  contributionData: [],
+  dailyActivity: {}
 };
 
 // Web Audio API Synthesizer Context
@@ -155,6 +160,12 @@ function initEventHandlers() {
     // Set default mockup data
     state.commitCount = 12; // Start with 12 commits for full tree demonstration!
     state.streak = 12;
+    
+    // Reset dailyActivity for the sandbox
+    state.dailyActivity = {};
+    const todayStr = getLocalDateString(new Date());
+    state.dailyActivity[todayStr] = 12;
+
     updateStateDisplay();
     
     initAudioCtx();
@@ -162,6 +173,15 @@ function initEventHandlers() {
     
     // Load mock user data
     setMockUserData();
+    
+    generateContributionData();
+    // Ensure today's block in heatmap shows the 12 commits
+    if (state.contributionData && state.contributionData.length === 168) {
+      state.contributionData[167] = 4;
+    }
+    renderHeatmap();
+    renderStatsChart();
+
     showScreen("dashboard-screen");
   });
 
@@ -225,6 +245,9 @@ function initEventHandlers() {
 
   document.getElementById("sim-reset").addEventListener("click", () => {
     updateCommitCount(0);
+    state.streak = 0;
+    localStorage.setItem("zen_streak", 0);
+    updateStateDisplay();
     playKotoNote(KOTO_SCALE[0]); // Low heavy note
   });
 
@@ -246,9 +269,45 @@ function initEventHandlers() {
 
 // --- STATE MODIFICATIONS ---
 function updateCommitCount(count) {
+  const oldCount = state.commitCount;
   state.commitCount = Math.max(0, count);
   localStorage.setItem("zen_commit_count", state.commitCount);
+
+  // If in sandbox/demo mode, allow streak and heatmap changes interactively
+  if (state.isDemoMode) {
+    if (oldCount === 0 && state.commitCount > 0) {
+      if (state.streak === 0) {
+        state.streak = 1;
+        localStorage.setItem("zen_streak", 1);
+      }
+    }
+  }
+
+  // Update daily activity for today (to keep weekly chart and heatmap in sync)
+  const todayStr = getLocalDateString(new Date());
+  if (!state.dailyActivity) {
+    state.dailyActivity = {};
+  }
+  state.dailyActivity[todayStr] = state.commitCount;
   
+  // Update today's cell (last element) in contributionData if initialized
+  if (state.contributionData && state.contributionData.length === 168) {
+    let level = 0;
+    if (state.commitCount === 0) level = 0;
+    else if (state.commitCount >= 1 && state.commitCount <= 3) level = 1;
+    else if (state.commitCount >= 4 && state.commitCount <= 6) level = 2;
+    else if (state.commitCount >= 7 && state.commitCount <= 10) level = 3;
+    else level = 4;
+
+    state.contributionData[167] = level;
+    renderHeatmap();
+  }
+
+  // Redraw stats chart if active
+  if (state.activeTab === "stats") {
+    renderStatsChart();
+  }
+
   // Update state values in UI slider
   const slider = document.getElementById("simulation-slider");
   if (slider) slider.value = state.commitCount;
@@ -363,6 +422,110 @@ function setMockUserData() {
   renderRepos();
 }
 
+// --- UTILITY & STREAK CALCULATION HELPERS ---
+function getLocalDateString(dateObj) {
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function calculateStreak(events) {
+  const contributionTypes = [
+    "PushEvent",
+    "PullRequestEvent",
+    "IssuesEvent",
+    "IssueCommentEvent",
+    "CommitCommentEvent",
+    "CreateEvent",
+    "ReleaseEvent"
+  ];
+
+  const activityDates = new Set();
+  events.forEach(evt => {
+    if (evt.created_at && contributionTypes.includes(evt.type)) {
+      const dateStr = getLocalDateString(new Date(evt.created_at));
+      activityDates.add(dateStr);
+    }
+  });
+
+  const todayObj = new Date();
+  const todayStr = getLocalDateString(todayObj);
+  const yesterdayObj = new Date();
+  yesterdayObj.setDate(yesterdayObj.getDate() - 1);
+  const yesterdayStr = getLocalDateString(yesterdayObj);
+
+  let calculatedStreak = 0;
+  let checkDate = new Date(todayObj);
+
+  if (activityDates.has(todayStr)) {
+    while (activityDates.has(getLocalDateString(checkDate))) {
+      calculatedStreak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+  } else if (activityDates.has(yesterdayStr)) {
+    checkDate.setDate(checkDate.getDate() - 1);
+    while (activityDates.has(getLocalDateString(checkDate))) {
+      calculatedStreak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+  } else {
+    calculatedStreak = 0;
+  }
+
+  return calculatedStreak;
+}
+
+function generateRealContributionData(events) {
+  const contributionTypes = [
+    "PushEvent",
+    "PullRequestEvent",
+    "IssuesEvent",
+    "IssueCommentEvent",
+    "CommitCommentEvent",
+    "CreateEvent",
+    "ReleaseEvent"
+  ];
+
+  // Map of local date string to activity weight/count
+  const dailyActivity = {};
+
+  events.forEach(evt => {
+    if (evt.created_at && contributionTypes.includes(evt.type)) {
+      const dateStr = getLocalDateString(new Date(evt.created_at));
+      let count = 1;
+      if (evt.type === "PushEvent" && evt.payload && evt.payload.commits) {
+        count = evt.payload.commits.length;
+      }
+      dailyActivity[dateStr] = (dailyActivity[dateStr] || 0) + count;
+    }
+  });
+
+  // Save in state for referencing in weekly charts
+  state.dailyActivity = dailyActivity;
+
+  state.contributionData = [];
+  const totalCells = 24 * 7; // 168 cells
+
+  for (let i = 0; i < totalCells; i++) {
+    // idx = 0 is 167 days ago, idx = 167 is today
+    const cellDate = new Date();
+    cellDate.setDate(cellDate.getDate() - (167 - i));
+    const cellDateStr = getLocalDateString(cellDate);
+
+    const activityCount = dailyActivity[cellDateStr] || 0;
+
+    let level = 0;
+    if (activityCount === 0) level = 0;
+    else if (activityCount >= 1 && activityCount <= 3) level = 1;
+    else if (activityCount >= 4 && activityCount <= 6) level = 2;
+    else if (activityCount >= 7 && activityCount <= 10) level = 3;
+    else level = 4;
+
+    state.contributionData.push(level);
+  }
+}
+
 // --- GITHUB API CLIENT INTEGRATION ---
 async function loadGitHubProfile(username) {
   showLoadingState();
@@ -446,6 +609,16 @@ async function loadGitHubProfile(username) {
       // Set calculated real commit count!
       state.commitCount = todayCommits;
       localStorage.setItem("zen_commit_count", todayCommits);
+
+      // Calculate real streak!
+      const calculatedStreak = calculateStreak(events);
+      state.streak = calculatedStreak;
+      localStorage.setItem("zen_streak", calculatedStreak);
+
+      // Generate real contribution data & render
+      generateRealContributionData(events);
+      renderHeatmap();
+      renderStatsChart();
     } else {
       throw new Error("Events API limited");
     }
@@ -1022,9 +1195,28 @@ function renderStatsChart() {
     ctx.stroke();
   }
 
-  // Mock past 7 days data
-  const data = [1, 3, state.commitCount, 4, 8, 2, Math.max(1, state.commitCount - 2)];
-  const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  // Dynamic past 7 days data based on state
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const data = [];
+  const labels = [];
+  
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateStr = getLocalDateString(d);
+    
+    labels.push(daysOfWeek[d.getDay()]);
+    
+    if (state.isDemoMode) {
+      // In demo mode, use mock values with state.commitCount mapped to today
+      const mockBase = [1, 3, 2, 4, 8, 2, state.commitCount];
+      data.push(mockBase[6 - i]);
+    } else {
+      // In GitHub mode, use real data
+      const count = (state.dailyActivity && state.dailyActivity[dateStr]) ? state.dailyActivity[dateStr] : 0;
+      data.push(count);
+    }
+  }
 
   // Draw smooth curve line
   ctx.save();
