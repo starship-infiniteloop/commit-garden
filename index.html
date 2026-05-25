@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Commit Garden - Cultivate your coding habits with a futuristic Japanese Zen digital Bonsai that grows with your GitHub commits." />
+  <title>Commit Garden | Grow your future</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+JP:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background Scenery Layer -->
+  <div class="bg-scenery-wrapper">
+    <!-- Beautiful SVG Mountains & Sun in Pastel Tones -->
+    <svg class="bg-scenery-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Sky soft gradient is handled by CSS, let's draw mist-shrouded sun & mountain layers -->
+      <!-- Soft Sun -->
+      <circle cx="720" cy="350" r="180" fill="url(#sunGradient)" opacity="0.85" filter="url(#glowFilter)" />
+      
+      <!-- Mountain Layer 3 (Back) -->
+      <path d="M-100 900 L250 550 L600 780 L1000 480 L1600 900 Z" fill="url(#mountainBackGradient)" opacity="0.6" />
+      
+      <!-- Mountain Layer 2 (Middle) -->
+      <path d="M-200 900 L450 630 L850 780 L1200 520 L1700 900 Z" fill="url(#mountainMidGradient)" opacity="0.75" />
+      
+      <!-- Mountain Layer 1 (Front Mt. Fuji silhouette) -->
+      <path d="M300 900 L720 400 L1140 900 Z" fill="url(#fujiGradient)" opacity="0.8" />
+      
+      <!-- Tori Gate Silhouette on the left -->
+      <g transform="translate(180, 520) scale(0.65)" opacity="0.55">
+        <path d="M10 60 H110 V50 H10 V60 Z" fill="var(--color-plum)" />
+        <path d="M0 45 C40 38, 80 38, 120 45 L120 33 C80 28, 40 28, 0 33 Z" fill="var(--color-plum)" />
+        <path d="M30 45 V130 H40 V45 Z" fill="var(--color-plum)" />
+        <path d="M80 45 V130 H90 V45 Z" fill="var(--color-plum)" />
+        <path d="M22 68 H98 V78 H22 V68 Z" fill="var(--color-plum)" />
+      </g>
+      
+      <!-- Pagoda Silhouette on the right -->
+      <g transform="translate(1120, 480) scale(0.55)" opacity="0.5">
+        <!-- Base -->
+        <rect x="30" y="200" width="80" height="20" rx="3" fill="var(--color-plum)" />
+        <!-- Level 1 -->
+        <rect x="40" y="150" width="60" height="50" fill="var(--color-plum)" />
+        <path d="M20 155 C50 145, 70 145, 100 155 L110 145 C75 130, 45 130, 10 145 Z" fill="var(--color-plum)" />
+        <!-- Level 2 -->
+        <rect x="48" y="100" width="44" height="45" fill="var(--color-plum)" />
+        <path d="M28 105 C50 97, 70 97, 92 105 L100 95 C70 82, 50 82, 20 95 Z" fill="var(--color-plum)" />
+        <!-- Level 3 -->
+        <rect x="54" y="60" width="32" height="40" fill="var(--color-plum)" />
+        <path d="M34 65 C50 58, 70 58, 86 65 L92 55 C65 44, 55 44, 28 55 Z" fill="var(--color-plum)" />
+        <!-- Spire -->
+        <line x1="70" y1="60" x2="70" y2="10" stroke="var(--color-plum)" stroke-width="4" stroke-linecap="round" />
+        <circle cx="70" cy="25" r="5" fill="var(--color-plum)" />
+        <circle cx="70" cy="15" r="3" fill="var(--color-plum)" />
+      </g>
+      
+      <!-- SVG Definitions -->
+      <defs>
+        <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="25" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+        
+        <!-- Soft Golden Peach Sunset Sun -->
+        <radialGradient id="sunGradient" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFE1C4" />
+          <stop offset="60%" stop-color="#FFB3A7" />
+          <stop offset="100%" stop-color="#FF9E9E" stop-opacity="0" />
+        </radialGradient>
+        
+        <!-- Mountain Gradients (Soft pastels, no dark blues/blacks) -->
+        <linearGradient id="mountainBackGradient" x1="720" y1="480" x2="720" y2="900" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#E2D4F0" />
+          <stop offset="100%" stop-color="#F2DFEB" />
+        </linearGradient>
+        
+        <linearGradient id="mountainMidGradient" x1="720" y1="520" x2="720" y2="900" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#D7C3E7" />
+          <stop offset="100%" stop-color="#EBCADA" />
+        </linearGradient>
+        
+        <linearGradient id="fujiGradient" x1="720" y1="400" x2="720" y2="900" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FFDDDD" />
+          <stop offset="35%" stop-color="#CAB5DC" />
+          <stop offset="100%" stop-color="#DFCADF" />
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  
+  <!-- Falling Sakura Petals Overlay -->
+  <div class="petals-container" id="petals-container"></div>
+  
+  <!-- MAIN CONTAINER -->
+  <div class="app-wrapper">
+    
+    <!-- HEADER CONTROLS (Top Floating Bar) -->
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="sakura-symbol">🌸</span>
+        <span class="logo-text">COMMIT GARDEN</span>
+        <span class="logo-subtext">Code Garden</span>
+      </div>
+      
+      <div class="global-controls">
+        <!-- Interactive Procedural Audio Toggle -->
+        <button class="control-btn" id="audio-toggle-btn" title="Toggle Procedural Zen Music" aria-label="Toggle Zen Soundscape">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+          </svg>
+          <span class="btn-label">Zen Sound</span>
+        </button>
+        
+        <!-- Theme Status Display (showing Pastel Gold indicator) -->
+        <div class="theme-badge">
+          <span class="badge-dot"></span>
+          <span class="badge-text">Futuristic Pastel Dawn</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- SCREEN 1: ZEN ENTRANCE (Login Page) -->
+    <section class="screen active" id="login-screen">
+      <div class="login-card">
+        <div class="login-emblem">
+          <svg viewBox="0 0 100 100" class="emblem-svg">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#emblemGrad)" stroke-width="2" />
+            <path d="M50 15 C50 15, 30 45, 50 85 C50 85, 70 45, 50 15 Z" fill="url(#emblemGrad)" opacity="0.8" />
+            <circle cx="50" cy="38" r="8" fill="#FFF" />
+          </svg>
+          <defs>
+            <linearGradient id="emblemGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFB7C5" />
+              <stop offset="100%" stop-color="#FFE5B4" />
+            </linearGradient>
+          </defs>
+        </div>
+        
+        <h1 class="login-title">Cultivate Your Code</h1>
+        <p class="login-subtitle">Enter your GitHub identity to grow a futuristic cherry blossom bonsai fed by your commits.</p>
+        
+        <form id="login-form" class="login-form">
+          <div class="input-group">
+            <span class="input-icon">👤</span>
+            <input type="text" id="github-username" placeholder="github-username" required autocomplete="off" />
+          </div>
+          
+          <button type="submit" class="submit-btn font-outfit">
+            <span>Cultivate Garden</span>
+            <span class="glow-arrow">🌱</span>
+          </button>
+        </form>
+        
+        <div class="login-divider">
+          <span>OR</span>
+        </div>
+        
+        <button class="demo-btn font-outfit" id="enter-demo-btn">
+          <span>Explore Sandbox Garden</span>
+          <span class="demo-badge">Zen Mode</span>
+        </button>
+        
+        <div class="login-footer">
+          <p class="japanese-quote">"A journey of a thousand miles begins with a single step."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: COMMIT SANCTUARY (Dashboard View) -->
+    <section class="screen" id="dashboard-screen">
+      <div class="dashboard-grid">
+        
+        <!-- SIDEBAR (LEFT) -->
+        <aside class="sidebar-panel">
+          <div class="sidebar-header">
+            <svg class="sidebar-torii" viewBox="0 0 120 120">
+              <path d="M10 50 H110 V42 H10 V50 Z" fill="var(--color-sakura-dark)" />
+              <path d="M0 38 C40 32, 80 32, 120 38 L120 28 C80 23, 40 23, 0 28 Z" fill="var(--color-sakura-dark)" />
+              <path d="M32 38 V110 H42 V38 Z" fill="var(--color-sakura-dark)" />
+              <path d="M78 38 V110 H88 V38 Z" fill="var(--color-sakura-dark)" />
+              <path d="M22 58 H98 V66 H22 V58 Z" fill="var(--color-sakura-dark)" />
+            </svg>
+            <h2 class="sidebar-title">COMMIT GARDEN</h2>
+            <p class="sidebar-subtitle">Cultivate code, bloom futures</p>
+          </div>
+          
+          <nav class="sidebar-nav">
+            <button class="nav-item active" data-tab="garden">
+              <span class="nav-icon">🌱</span>
+              <div class="nav-labels">
+                <span class="nav-jp">My Garden</span>
+                <span class="nav-en">Cultivate & Grow</span>
+              </div>
+            </button>
+            
+            <button class="nav-item" data-tab="stats">
+              <span class="nav-icon">📈</span>
+              <div class="nav-labels">
+                <span class="nav-jp">Statistics</span>
+                <span class="nav-en">Daily Analytics</span>
+              </div>
+            </button>
+            
+            <button class="nav-item" data-tab="streak">
+              <span class="nav-icon">🔥</span>
+              <div class="nav-labels">
+                <span class="nav-jp">Zen Streak</span>
+                <span class="nav-en">Consistency Ledger</span>
+              </div>
+            </button>
+            
+            <button class="nav-item" data-tab="sim">
+              <span class="nav-icon">⚙️</span>
+              <div class="nav-labels">
+                <span class="nav-jp">Cultivator</span>
+                <span class="nav-en">Sandbox Settings</span>
+              </div>
+            </button>
+          </nav>
+          
+          <div class="sidebar-quote-box">
+            <span class="quote-leaf">🍁</span>
+            <p class="quote-jp">"Consistency is power. Every commit feeds the blossom."</p>
+            <p class="quote-author">- Zen Philosophy</p>
+          </div>
+          
+          <button class="logout-btn" id="logout-btn">
+            <span>🚪 Leave Sanctuary</span>
+          </button>
+        </aside>
+
+        <!-- CENTER VIEWPORT: THE GARDEN -->
+        <main class="garden-viewport">
+          
+          <!-- Tab 1: Garden View (Central Bonsai) -->
+          <div class="viewport-tab-content active" id="tab-garden">
+            <div class="garden-interactive-card">
+              <!-- Glass floating island -->
+              <div class="bonsai-island-container">
+                <div class="glowing-orb"></div>
+                <div class="bonsai-island-base">
+                  <div class="island-rim"></div>
+                  <!-- The Bonsai Canvas -->
+                  <canvas id="bonsai-canvas" width="600" height="420"></canvas>
+                </div>
+              </div>
+              
+              <!-- Quote / Status overlay -->
+              <div class="garden-status-text">
+                <h3 id="garden-stage-name">無の庭 — Drought Land</h3>
+                <p id="garden-stage-desc">0 commits today. A quiet, dry Zen stone garden waiting for the spark of creation.</p>
+              </div>
+            </div>
+            
+            <!-- MILESTONES / STAGES TIMELINE (BOTTOM) -->
+            <div class="timeline-card">
+              <h4 class="timeline-title">Cultivation Evolution Phases</h4>
+              <div class="timeline-stages">
+                <div class="timeline-stage-item active" id="stage-0" data-level="0">
+                  <div class="stage-icon">🪨</div>
+                  <span class="stage-jp">Empty Garden</span>
+                  <span class="stage-en">Drought</span>
+                  <span class="stage-commits">0 commits</span>
+                </div>
+                <div class="timeline-arrow">🡢</div>
+                <div class="timeline-stage-item" id="stage-1" data-level="1">
+                  <div class="stage-icon">🌱</div>
+                  <span class="stage-jp">Sprout</span>
+                  <span class="stage-en">New Seedling</span>
+                  <span class="stage-commits">1–3 commits</span>
+                </div>
+                <div class="timeline-arrow">🡢</div>
+                <div class="timeline-stage-item" id="stage-2" data-level="2">
+                  <div class="stage-icon">🌿</div>
+                  <span class="stage-jp">Sapling</span>
+                  <span class="stage-en">Young Bonsai</span>
+                  <span class="stage-commits">4–6 commits</span>
+                </div>
+                <div class="timeline-arrow">🡢</div>
+                <div class="timeline-stage-item" id="stage-3" data-level="3">
+                  <div class="stage-icon">🌳</div>
+                  <span class="stage-jp">Zen Tree</span>
+                  <span class="stage-en">Mature Branch</span>
+                  <span class="stage-commits">7–10 commits</span>
+                </div>
+                <div class="timeline-arrow">🡢</div>
+                <div class="timeline-stage-item" id="stage-4" data-level="4">
+                  <div class="stage-icon">🌸</div>
+                  <span class="stage-jp">Full Bloom</span>
+                  <span class="stage-en">Sakura Forest</span>
+                  <span class="stage-commits">10+ commits</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tab 2: Detailed Stats View -->
+          <div class="viewport-tab-content" id="tab-stats">
+            <div class="stats-grid-inner">
+              <div class="glass-subcard">
+                <h3>📈 Commit Activity Graph</h3>
+                <p class="card-desc">Your daily coding growth visualized in a soft pastel horizon line.</p>
+                <div class="chart-container">
+                  <canvas id="stats-chart" width="550" height="220"></canvas>
+                </div>
+              </div>
+              
+              <div class="glass-subcard">
+                <h3>📚 Repository Directory</h3>
+                <p class="card-desc">Explore your cultivated codebases fed into the soil of this garden.</p>
+                <div class="repo-list-container" id="repo-list">
+                  <!-- JS will render repositories here -->
+                  <div class="repo-empty-state">
+                    <span class="empty-icon">🗂️</span>
+                    <p>No repository data loaded yet. Connect your GitHub or simulate commits to fill this ledger.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tab 3: Streak and Calendar Grid -->
+          <div class="viewport-tab-content" id="tab-streak">
+            <div class="streak-grid-inner">
+              <div class="glass-subcard streak-hero">
+                <div class="streak-fire-container">
+                  <span class="streak-fire-emoji">🔥</span>
+                  <div class="streak-number" id="streak-days-count">0</div>
+                  <span class="streak-label">DAYS STREAK</span>
+                </div>
+                <p class="streak-motivational-msg">"Do not overlook a single drop of water; in time it fills the Zen pool."</p>
+              </div>
+              
+              <div class="glass-subcard contribution-heatmap-card">
+                <h3>📅 Contribution Garden Ledger</h3>
+                <p class="card-desc">Pastel blossom intensity representing historic daily contribution density.</p>
+                
+                <div class="heatmap-wrapper">
+                  <div class="heatmap-days-labels">
+                    <span>Mon</span><span>Wed</span><span>Fri</span>
+                  </div>
+                  <div class="heatmap-grid" id="contribution-grid">
+                    <!-- Javascript will render 52 weeks * 7 days grid squares -->
+                  </div>
+                </div>
+                
+                <div class="heatmap-legend">
+                  <span>Drought 🏜️</span>
+                  <div class="legend-square lvl-0"></div>
+                  <div class="legend-square lvl-1"></div>
+                  <div class="legend-square lvl-2"></div>
+                  <div class="legend-square lvl-3"></div>
+                  <div class="legend-square lvl-4"></div>
+                  <span>Full Sakura Bloom 🌸</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tab 4: Zen Cultivator & Config -->
+          <div class="viewport-tab-content" id="tab-sim">
+            <div class="cultivator-settings-grid">
+              <div class="glass-subcard">
+                <h3>⚙️ Sandbox Cultivator</h3>
+                <p class="card-desc">Don't have internet or want to test the growth stages of your sakura tree instantly? Use these developer zen tools.</p>
+                
+                <div class="settings-control-group">
+                  <label for="simulation-slider">Cultivation Stage Scrub:</label>
+                  <input type="range" id="simulation-slider" min="0" max="15" value="0" class="pastel-slider" />
+                  <div class="slider-labels">
+                    <span>0 (Drought)</span>
+                    <span>5 (Sapling)</span>
+                    <span>10 (Full Bloom)</span>
+                    <span>15 (Max Glow)</span>
+                  </div>
+                </div>
+                
+                <div class="simulator-buttons">
+                  <button class="glow-btn" id="sim-add-1">🌱 Zen Commit (+1)</button>
+                  <button class="glow-btn" id="sim-add-5">🌿 Bloom Surge (+5)</button>
+                  <button class="glow-btn danger" id="sim-reset">🪨 Dust to Dust (Reset)</button>
+                </div>
+              </div>
+              
+              <div class="glass-subcard">
+                <h3>🔊 Auditory Harmony</h3>
+                <p class="card-desc">Commit Garden synthesizes organic pentatonic chords and wind chimes dynamically when your garden grows.</p>
+                
+                <div class="audio-panel">
+                  <div class="audio-switch-group">
+                    <span class="audio-switch-label">Procedural Sound Engine:</span>
+                    <button class="toggle-switch-btn" id="audio-panel-toggle">Disabled</button>
+                  </div>
+                  
+                  <div class="audio-test-buttons">
+                    <button class="mini-accent-btn" id="test-koto-btn">🎋 Play Koto Pluck</button>
+                    <button class="mini-accent-btn" id="test-chime-btn">🔔 Play Zen Chime</button>
+                  </div>
+                  
+                  <div class="audio-status-box">
+                    <p class="status-title">Current Synthesis Settings:</p>
+                    <p class="status-desc">Scale: Sakura Pentatonic (A, B, C, E, F) synthesized in real-time via Web Audio Oscillators.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </main>
+
+        <!-- INFO SIDEBAR (RIGHT) -->
+        <aside class="info-sidebar">
+          
+          <!-- User Profile Card -->
+          <div class="glass-card profile-card">
+            <div class="profile-header">
+              <div class="avatar-ring">
+                <img id="user-avatar" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=150&q=80" alt="Avatar" />
+              </div>
+              <div class="profile-meta">
+                <h3 id="user-display-name">Octocat (Zen Mode)</h3>
+                <p id="user-github-link">@github-user</p>
+                <div class="profile-badge">Cultivator</div>
+              </div>
+            </div>
+            
+            <div class="profile-bio" id="user-bio">
+              "Cultivating coding habits, one beautiful sprout at a time. Plant seeds today to harvest tomorrow's forest."
+            </div>
+            
+            <div class="profile-stats">
+              <div class="stat-item">
+                <span class="stat-num" id="stat-repos">12</span>
+                <span class="stat-lbl">Repos</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-num" id="stat-followers">48</span>
+                <span class="stat-lbl">Followers</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-num" id="stat-following">24</span>
+                <span class="stat-lbl">Following</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Live Commit Metric Card -->
+          <div class="glass-card metric-card">
+            <div class="metric-header">
+              <span class="metric-title-icon">🌱</span>
+              <h4>TODAY'S CULTIVATION</h4>
+            </div>
+            
+            <div class="metric-body">
+              <div class="metric-number-wrapper">
+                <div class="metric-number" id="current-commit-count">0</div>
+                <div class="metric-label">COMMITS TODAY</div>
+              </div>
+              
+              <!-- Mini indicator line -->
+              <div class="blossom-progress-bar-wrapper">
+                <div class="blossom-progress-bar" id="today-blossom-bar" style="width: 0%"></div>
+              </div>
+              
+              <div class="metric-caption">
+                <span class="delta-arrow" id="metric-delta-arrow">▲</span>
+                <span class="delta-text" id="metric-delta-text">Ready for your first commit</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Recent Activity Log Widget -->
+          <div class="glass-card activity-card">
+            <div class="activity-header">
+              <h4>RECENT EVENTS LOG</h4>
+              <span class="live-pulse-dot"></span>
+            </div>
+            
+            <div class="activity-timeline-list" id="activity-log">
+              <!-- Dynamic entries go here -->
+              <div class="activity-item">
+                <span class="act-dot"></span>
+                <div class="act-details">
+                  <p class="act-title">Opened Zen Sanctuary</p>
+                  <p class="act-time">Just now</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="act-dot empty"></span>
+                <div class="act-details">
+                  <p class="act-title">No GitHub webhook loaded</p>
+                  <p class="act-time">Simulation ready</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </aside>
+        
+      </div>
+    </section>
+    
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
